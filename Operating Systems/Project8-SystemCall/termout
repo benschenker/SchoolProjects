@@ -1,0 +1,41 @@
+Ben Schenker
+PS8
+Nov 26 2013
+
+p2
+[schenk@senior12 8]$ strace ./a.out 
+execve("./a.out", ["./a.out"], [/* 88 vars */]) = 0
+write(1, "Hello, World\n", 13Hello, World
+)          = 13
+--- SIGSEGV {si_signo=SIGSEGV, si_code=SI_KERNEL, si_addr=0} ---
++++ killed by SIGSEGV (core dumped) +++
+Segmentation fault (core dumped)
+Without an exit call, the processor just tries running the next instruction (unpredictable) and it gets a SIGSEGV.
+
+p3
+[schenk@senior12 8]$ strace ./a.out 
+execve("./a.out", ["./a.out"], [/* 88 vars */]) = 0
+write(1, "Hello, World\n", 13Hello, World
+)          = 13
+_exit(1)                                = ?
++++ exited with 1 +++
+
+p4
+[schenk@senior12 8]$ strace ./a.out 
+execve("./a.out", ["./a.out"], [/* 88 vars */]) = 0
+write(1, 0x1, 13)                       = -1 EFAULT (Bad address)
+_exit(1)                                = ?
++++ exited with 1 +++
+
+p5
+[schenk@senior12 8]$ ./a.out A
+time = 0.026955s
+[schenk@senior12 8]$ ./a.out B
+time = 0.031837s
+[schenk@senior12 8]$ ./a.out C
+time = 0.484865s
+
+cost of single loop is 2.6955ns
+cost of single function call is 0.4882ns
+cost of single system call is 47.9983ns that is almost 100 times as much as a function call
+

@@ -1,0 +1,77 @@
+[schenk@senior12 9]$ ./testbed.exe 
+parent hello world my pid is 1 and my parent is 0
+pid=1, i=0, ticks=0
+pid=1, i=100000000, ticks=3
+pid=1, i=200000000, ticks=6
+pid=1, i=300000000, ticks=9
+pid=1, i=400000000, ticks=12
+pid=1, i=500000000, ticks=15
+pid=1, i=600000000, ticks=18
+
+%every time sched_switch is entered, it does a sched_ps
+%process 1 has not finished but is switched out for its child
+%which will change its static priority to -20:
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	1	0x7fce363dd000	0xe69010	0	420	20
+2	1	0	0x7fce363cd000	0xe69250	0	0	0
+3	1	0	0x7fce363bd000	0xe69490	0	0	0
+HIIII child here! my pid is 2 and my parent is 1
+pid=2, i=0, ticks=20
+pid=2, i=100000000, ticks=23
+pid=2, i=200000000, ticks=26
+pid=2, i=300000000, ticks=29
+pid=2, i=400000000, ticks=32
+pid=2, i=500000000, ticks=36
+pid=2, i=600000000, ticks=39
+pid=2, i=700000000, ticks=42
+pid=2, i=800000000, ticks=45
+pid=2, i=900000000, ticks=48
+
+%child 2 is allowed to finish (because it is so important!) and
+%it becomes a zombie (state=3)
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	0	0x7fce363dd000	0xe69010	0	420	20
+2	1	3	0x7fce363cd000	0xe69250	-20	32	32
+3	1	0	0x7fce363bd000	0xe69490	0	0	0
+HIIII child here! my pid is 3 and my parent is 1
+pid=3, i=0, ticks=52
+
+%proc 3 gets interrupted a lot of times because it is so nice,
+%cleaned up output
+pid=3, i=100000000, ticks=55
+pid=3, i=200000000, ticks=58
+pid=3, i=300000000, ticks=61
+pid=1, i=700000000, ticks=64
+pid=1, i=800000000, ticks=67
+pid=1, i=900000000, ticks=70
+
+%now pid 1 finishes its job an waits for both children
+%its first child finished already so it returns immediately
+%its second child has not yet finished so proc 1 goes to sleep
+%(state=2)
+one child returned 1
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	2	0x7fce363dd000	0xe69010	0	630	30
+3	1	0	0x7fce363bd000	0xe69490	19	440	11
+
+%proc 3 gets interrupted a lot of times, cleaned up output
+pid=3, i=400000000, ticks=75
+pid=3, i=500000000, ticks=78
+pid=3, i=600000000, ticks=81
+pid=3, i=700000000, ticks=84
+pid=3, i=800000000, ticks=87
+pid=3, i=900000000, ticks=91
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	2	0x7fce363dd000	0xe69010	0	630	30
+3	1	1	0x7fce363bd000	0xe69490	19	1280	32
+
+%now proc 3 finishes and wakes up proc 1 which finishes
+%and no more processes are schedulable so we exit
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	0	0x7fce363dd000	0xe69010	0	630	30
+another child returned 2
+pid	ppid	state	stack		wq		spr	dpr	time
+1	0	3	0x7fce363dd000	0xe69010	0	630	30
+all procs ended
+
+

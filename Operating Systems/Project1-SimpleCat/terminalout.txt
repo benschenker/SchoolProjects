@@ -1,0 +1,59 @@
+>>>>>stdin to stdout
+[schenk@senior12 p1final]$ ./copycat
+you will be defeated!
+you will be defeated!
+
+>>>>>input file to stdout
+[schenk@senior12 p1final]$ ./copycat test.txt
+hello world
+
+>>>>>input file to output 
+[schenk@senior12 p1final]$ ./copycat test.txt -o out.txt
+[schenk@senior12 p1final]$ ./copycat out.txt 
+hello world
+
+>>>>>no read permission
+[schenk@senior12 p1final]$ ls -l
+total 21
+-rwxr-xr-x 1 schenk students 9913 Sep 22 21:02 copycat
+-rw-r--r-- 1 schenk students 2797 Sep 22 21:00 copycat.c
+-rw-r--r-- 1 schenk students 4680 Sep 22 21:02 copycat.o
+-rw-r--r-- 1 schenk students  119 Sep 22 21:02 Makefile
+-rw-r--r-- 0 schenk students  113 Sep 22 15:28 Makefile~
+-rw-r--r-- 1 schenk students   12 Sep 22 21:03 test.txt
+-rw-r--r-- 0 schenk students    0 Sep 22 21:03 test.txt~
+[schenk@senior12 p1final]$ ./copycat test.txt 
+hello world
+[schenk@senior12 p1final]$ chmod 244 test.txt
+[schenk@senior12 p1final]$ ./copycat test.txt 
+error opening input file: test.txt. Permission denied
+
+>>>>>no write permission
+[schenk@senior12 p1final]$ ls -l
+total 21
+-rwxr-xr-x 1 schenk students 9913 Sep 22 21:02 copycat
+-rw-r--r-- 1 schenk students 2797 Sep 22 21:00 copycat.c
+-rw-r--r-- 1 schenk students 4680 Sep 22 21:02 copycat.o
+-rw-r--r-- 1 schenk students  119 Sep 22 21:02 Makefile
+-rw-r--r-- 0 schenk students  113 Sep 22 15:28 Makefile~
+-rw-r--r-- 1 schenk students    0 Sep 22 21:07 out.txt
+-rw-r--r-- 1 schenk students   12 Sep 22 21:03 test.txt
+-rw-r--r-- 0 schenk students    0 Sep 22 21:03 test.txt~
+[schenk@senior12 p1final]$ ./copycat test.txt -o out.txt 
+[schenk@senior12 p1final]$ ./copycat out.txt 
+hello world
+[schenk@senior12 p1final]$ chmod 444 out.txt 
+[schenk@senior12 p1final]$ ./copycat test.txt -o out.txt 
+error opening output file: out.txt. Permission denied
+
+>>>>>file doesn't exist
+[schenk@senior12 p1final]$ ls
+copycat    copycat.o  Makefile~  test.txt
+copycat.c  Makefile   out.txt	 test.txt~
+[schenk@senior12 p1final]$ ./copycat notafile
+error opening input file: notafile. No such file or directory
+
+>>>>>output to a dir
+[schenk@senior12 p1final]$ mkdir nothing
+[schenk@senior12 p1final]$ ./copycat  -o nothing/
+error opening output file: nothing/. Is a directory

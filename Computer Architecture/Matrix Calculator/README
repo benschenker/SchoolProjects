@@ -1,0 +1,32 @@
+Variables:
+Variable names can be between 1 and 4 characters long and are made up of any ascii character as long as they don’t start with a number or a minus sign.  This allows for well over 100^4 possible unique variable names.  
+
+	Declaration:
+Variables can be declared in two ways, explicitly and implicitly.  It is important to have a trailing newline for every variable declaration
+
+Explicit declaration can consist of a statement as follows, “var = 1” this would assign the scalar value of one to the variable with name “var”.  You can see that there are spaces between each element (variable name, equal sign or number).   Also this number can be a negative number, an example of the correct syntax being “a = -1, -5, 7”
+To declare a row vector the proper syntax is “var = num num num”
+To declare a column vector the proper syntax is “var = num, num, num”
+To declare a matrix the proper syntax is “var = num num num, num num num, num num num”.  As you can see, commas delineate between the rows of the matrix.  For matrices, the program checks to see if the dimensions are consistent (same number of elements in each row and each column respectively)
+
+Implicit declaration for a binary operation consists of a statement as follows, “a = b + c”. Variables “b” and “c” will be operated on by “+” with the result being stored in the variable “a”.  The possible operations will be in the appropriate section of this header.
+The program does support unary operations, but as of now the only one that actually works is the print function,  The other one (currently not working) is the transpose function which would be called as follows a = b ‘ and stores the transpose of b in the variable a.  
+	
+Working operations
+Addition: binary operation: example “a = b + c”: b and c must have the same dimensions and a will inherit them.  
+
+Subtraction: binary operation: example “a = b - c”.  b and c must have the same dimensions and  a will inherit them.  
+
+Multiplication: binary operation: example “a = b * c”.  supports matrices of variable size as long as the dimensions agree as follows: assuming neither b nor c is a scalar, If b has m1 rows and n1 columns and c has m2 rows and m2 columns, the multiply will only work if n1 and m2 are equal. The resulting variable a will have m1 rows and n2 columns.  If b xor c is a scalar the program will execute a scalar multiply such that a will contain the scaled matrix.  If b and c are scalars the program will just do a simple multiply (degenerate case of matrix multiply) and a will be the resultant scalar (degenerate matrix).
+
+Print: unary operation: example “a print”  will print out matrix of any supported size delineating columns by tabs and rows by newlines.  The print function will actually also be called as long as the character following the space after the variable is not an equal sign so “a %5randomtext” will also print the contents of a to the terminal.  
+
+Copy: (currently does not work, use multiply by 1 instead) :unary operation: example “a = b” copies the contents of variable b into variable a, they are not linked in any way but contain the same data after this operation.  
+
+	Data Structure for the variables:
+All of the user’s variables are stored in a symbol table. Every entry in the symbol
+table is made up of its name, the address in memory containing its data, and its dimensions m and n (each taking up a word of memory for a total of 16 bytes per symbol table entry). Our matrix-multiplication function utilizes an internal dot-product function (user-level dot-products can be computed by matrix-multiplying row and column vectors). We have a function that decides whether to call scalar-matrix multiplication or matrix-matrix multiplication whenever multiplication in general is called.
+
+
+Symtablen contains the number of currently occupied bytes in the symtab
+By default, 256 bytes (enough for an 8x8 matrix) are allocated for every variable. This constant is defined at the top and can be changed (with one trivial change in another part of the program) to support larger matrices. Similarly, the default symbol table length is 2048 bytes, allowing for up to 1024 variables. The line buffer size is 512 bytes. As stated, these default values act like #define constants in C to represent parameters that were arbitrarily chosen and could be changed. 

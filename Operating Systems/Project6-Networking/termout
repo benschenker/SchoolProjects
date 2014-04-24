@@ -1,0 +1,20 @@
+on server
+[schenk@senior12 rec]$ ./tcp_recv 3490 >outfile.txt 
+bytes received = 206672, rate = 6.330110MB/s
+IP:199.98.20.52, hostname = senior12.ee.cooper.edu
+
+on client
+[schenk@senior12 send]$ ./tcp_send senior12.ee.cooper.edu 3490 <dict.txt 
+rate = 6.361836MB/s
+
+diff of files dict.txt and output.txt returns nothing
+
+on udp server
+[schenk@senior12 userver]$ ./udp_server 3490
+
+on udp client
+[schenk@senior12 uclient]$ ./udp_client senior12.ee.cooper.edu 3490 DATE
+response = Thu Nov 14 00:50:07 2013
+[schenk@senior12 uclient]$ ./udp_client senior12.ee.cooper.edu 3490 UPTIME
+response = 1656521
+
